@@ -10,22 +10,49 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="canvas"></div>
+    <canvas id="canvas"></canvas>
     <script>
-      canvas.onclick = (e) => {
-        console.log(e.clientX)
-        console.log(e.clientY)
-        let div = document.createElement('div')
-        div.style.position = 'absolute'
-        div.style.left = e.clientX + 'px'
-        div.style.top = e.clientY + 'px'
-        div.style.width = '6px'
-        div.style.height = '6px'
-        div.style.marginTop = '-3px'
-        div.style.marginLeft = '-3px'
-        div.style.backgroundColor = 'black'
-        div.style.borderRadius = '50%'
-        canvas.appendChild(div)
+      // canvas
+
+      let canvas = document.getElementById('canvas')
+      canvas.width = document.documentElement.clientWidth
+      canvas.height = document.documentElement.clientHeight
+      let ctx = canvas.getContext('2d')
+      ctx.fillStyle = 'red'
+      let padding = false
+
+      let isTouchDevice = 'ontouchstart' in document.documentElement
+      console.log(isTouchDevice)
+      if (isTouchDevice) {
+        canvas.ontouchmove = (e) => {
+          ctx.beginPath()
+          ctx.arc(
+            e.touches[0].clientX - 5,
+            e.touches[0].clientY - 5,
+            10,
+            0,
+            2 * Math.PI
+          )
+          ctx.fill()
+        }
+      } else {
+        canvas.onmousedown = () => {
+          console.log('onclick点击')
+          padding = true
+        }
+        canvas.onmouseup = () => {
+          padding = false
+          console.log('onmouseup鼠标弹起')
+          console.log(padding)
+        }
+        canvas.onmousemove = (e) => {
+          console.log('onmousemove:' + padding)
+          if (padding === true) {
+            ctx.beginPath()
+            ctx.arc(e.clientX - 5, e.clientY - 5, 10, 0, 2 * Math.PI)
+            ctx.fill()
+          }
+        }
       }
     </script>
   </body>
