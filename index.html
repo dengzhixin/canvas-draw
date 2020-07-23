@@ -6,53 +6,85 @@
       name="viewport"
       content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"
     />
-    <title>Document</title>
+    <title>简易画板</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="toolsbar">
+      画笔颜色<input type="color" name="" id="paintColor" />
+
+      <select name="" id="paintLineWidth">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="8" selected>8</option>
+        <option value="16">16</option>
+      </select>
+      <input type="button" value="重新画" id="clear" />
+    </div>
     <canvas id="canvas"></canvas>
     <script>
-      // canvas
+      //触摸屏判断
+      let isTouchDevice = 'ontouchstart' in document.documentElement
 
       let canvas = document.getElementById('canvas')
       canvas.width = document.documentElement.clientWidth
-      canvas.height = document.documentElement.clientHeight
+      canvas.height = document.documentElement.clientHeight - 50
+      console.log(canvas.height)
       let ctx = canvas.getContext('2d')
-      ctx.fillStyle = 'red'
+      ctx.strokeStyle = 'black'
+      ctx.lineCap = 'round' //线段直接的连接方式
+      ctx.lineWidth = 8
       let padding = false
-
-      let isTouchDevice = 'ontouchstart' in document.documentElement
-      console.log(isTouchDevice)
+      let last
       if (isTouchDevice) {
+        canvas.ontouchstart = (e) => {
+          last = [e.touches[0].layerX, e.touches[0].clientY - 40]
+        }
         canvas.ontouchmove = (e) => {
-          ctx.beginPath()
-          ctx.arc(
-            e.touches[0].clientX - 5,
-            e.touches[0].clientY - 5,
-            10,
-            0,
-            2 * Math.PI
+          drawLine(
+            last[0],
+            last[1],
+            e.touches[0].clientX,
+            e.touches[0].clientY - 40
           )
-          ctx.fill()
+          last = [e.touches[0].clientX, e.touches[0].clientY - 40]
         }
       } else {
-        canvas.onmousedown = () => {
+        canvas.onmousedown = (e) => {
           console.log('onclick点击')
           padding = true
+          last = [e.layerX, e.layerY]
         }
         canvas.onmouseup = () => {
           padding = false
           console.log('onmouseup鼠标弹起')
-          console.log(padding)
         }
         canvas.onmousemove = (e) => {
-          console.log('onmousemove:' + padding)
+          console.log(e)
           if (padding === true) {
-            ctx.beginPath()
-            ctx.arc(e.clientX - 5, e.clientY - 5, 10, 0, 2 * Math.PI)
-            ctx.fill()
+            drawLine(last[0], last[1], e.layerX, e.layerY)
+            last = [e.layerX, e.layerY]
           }
         }
+      }
+
+      function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+        ctx.stroke()
+      }
+
+      paintColor.onchange = (e) => {
+        ctx.strokeStyle = paintColor.value
+      }
+
+      paintLineWidth.onchange = () => {
+        ctx.lineWidth = paintLineWidth.value
+      }
+      clear.onclick = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
       }
     </script>
   </body>
