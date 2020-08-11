@@ -4,16 +4,25 @@ function exportCanvasAsPNG(id, fileName) {
 
     var MIME_TYPE = "image/png";
 
-    var imgURL = canvasElement.toDataURL(MIME_TYPE);
+    var imgData = canvasElement.toDataURL(MIME_TYPE);
 
-    var dlLink = document.createElement('a');
-    dlLink.download = fileName;
-    dlLink.href = imgURL;
-    dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+    var link = document.createElement("a");
+    var strDataURI = imgData.substr(22, imgData.length);
+    var blob = dataURLtoBlob(imgData);
+    var objurl = URL.createObjectURL(blob);
+    link.download = "image.png";
+    link.href = objurl;
+    link.click();
 
-    document.body.appendChild(dlLink);
-    dlLink.click();
-    document.body.removeChild(dlLink);
+    function  dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+    }
+
 }
 
 export default exportCanvasAsPNG

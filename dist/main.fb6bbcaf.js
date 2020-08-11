@@ -206,14 +206,30 @@ exports.default = void 0;
 function exportCanvasAsPNG(id, fileName) {
   var canvasElement = document.getElementById(id);
   var MIME_TYPE = "image/png";
-  var imgURL = canvasElement.toDataURL(MIME_TYPE);
-  var dlLink = document.createElement('a');
-  dlLink.download = fileName;
-  dlLink.href = imgURL;
-  dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-  document.body.appendChild(dlLink);
-  dlLink.click();
-  document.body.removeChild(dlLink);
+  var imgData = canvasElement.toDataURL(MIME_TYPE);
+  var link = document.createElement("a");
+  var strDataURI = imgData.substr(22, imgData.length);
+  var blob = dataURLtoBlob(imgData);
+  var objurl = URL.createObjectURL(blob);
+  link.download = "image.png";
+  link.href = objurl;
+  link.click();
+
+  function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], {
+      type: mime
+    });
+  }
 }
 
 var _default = exportCanvasAsPNG;
@@ -441,7 +457,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51275" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53682" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
