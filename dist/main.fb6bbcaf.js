@@ -203,17 +203,29 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-function exportCanvasAsPNG(id, fileName) {
+function exportCanvasAsPNG(id, isTouchdevice) {
   var canvasElement = document.getElementById(id);
   var MIME_TYPE = "image/png";
   var imgData = canvasElement.toDataURL(MIME_TYPE);
-  var link = document.createElement("a");
-  var strDataURI = imgData.substr(22, imgData.length);
-  var blob = dataURLtoBlob(imgData);
-  var objurl = URL.createObjectURL(blob);
-  link.download = "image.png";
-  link.href = objurl;
-  link.click();
+
+  if (isTouchdevice) {
+    var image = new Image();
+    image.src = imgData;
+    image.classList.add('saveImage');
+    savePhotoBox.children[1].append(image);
+    savePhotoBox.classList.add('visible');
+
+    closeSavePhotoBox.onclick = function () {
+      savePhotoBox.classList.remove('visible');
+    };
+  } else {
+    var link = document.createElement("a");
+    var blob = dataURLtoBlob(imgData);
+    var objUrl = URL.createObjectURL(blob);
+    link.download = "image.png";
+    link.href = objUrl;
+    link.click();
+  }
 
   function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(','),
@@ -271,7 +283,8 @@ var Drawer = /*#__PURE__*/function () {
       clearBtn: '#clear',
       penBox: '#penBox',
       saveBtn: '#save',
-      logo: '#logo'
+      logo: '#logo',
+      closeSavePhotoBox: '#closeSavePhotoBox'
     };
   }
 
@@ -411,7 +424,7 @@ var Drawer = /*#__PURE__*/function () {
   }, {
     key: "save",
     value: function save() {
-      (0, _exportCanvasAsPNG.default)('canvas', 'file');
+      (0, _exportCanvasAsPNG.default)('canvas', this.isTouchDevice);
     }
   }]);
 
@@ -457,7 +470,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53682" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56823" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

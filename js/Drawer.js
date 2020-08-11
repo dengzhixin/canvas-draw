@@ -15,7 +15,8 @@ class Drawer {
             clearBtn: '#clear',
             penBox: '#penBox',
             saveBtn:'#save',
-            logo:'#logo'
+            logo:'#logo',
+            closeSavePhotoBox:'#closeSavePhotoBox'
         }
 
     }
@@ -105,6 +106,7 @@ class Drawer {
             this.last = [e.touches[0].clientX, e.touches[0].clientY - 40]
         }
 
+
         document.body.addEventListener('touchmove', function (e) {
             e.preventDefault(); //阻止默认的处理方式(阻止下拉滑动的效果)
         }, {passive: false}); //passive 参数不能省略，用来兼容ios和android
@@ -133,7 +135,7 @@ class Drawer {
         this.ctx.stroke()
     }
     save(){
-        exportCanvasAsPNG('canvas','file')
+        exportCanvasAsPNG('canvas',this.isTouchDevice)
     }
 }
 export default Drawer

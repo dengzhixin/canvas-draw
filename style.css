@@ -78,11 +78,29 @@ input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
 
 input[type="color"]::-webkit-color-swatch { border: 0; }
 
-@media (max-width: 500px) {
+.savePhotoBox{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: none;
+}
+.savePhotoBox .title{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    height: 54px;
+    width: 100%;
+}
+.savePhotoBox.visible{
+    display: block;
+}
+@media (max-width: 768px) {
     h1{
         font-size: 20px
     }
     .pen{
         font-size: 24px;
     }
+
 }
