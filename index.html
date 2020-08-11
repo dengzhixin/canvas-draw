@@ -1,91 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"
+            name="viewport"
+            content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"
     />
     <title>简易画板</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="toolsbar">
-      画笔颜色<input type="color" name="" id="paintColor" />
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="toolsbar">
+    画笔颜色<input type="color" name="" id="paintColor"/>
+    <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-pen"></use>
+    </svg>
 
-      <select name="" id="paintLineWidth">
+    <select name="" id="paintLineWidth">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="4">4</option>
         <option value="8" selected>8</option>
         <option value="16">16</option>
-      </select>
-      <input type="button" value="重新画" id="clear" />
-    </div>
-    <canvas id="canvas"></canvas>
-    <script>
-      //触摸屏判断
-      let isTouchDevice = 'ontouchstart' in document.documentElement
+    </select>
+    <input type="button" value="重新画" id="clear"/>
+</div>
+<canvas id="canvas"></canvas>
+<script>
+    class Drawer {
+        constructor() {
+            this.isTouchDevice=false
+            this.ctx=undefined
+            this.drawing=false
+            this.last=undefined
 
-      let canvas = document.getElementById('canvas')
-      canvas.width = document.documentElement.clientWidth
-      canvas.height = document.documentElement.clientHeight - 40
-      console.log(canvas.height)
-      let ctx = canvas.getContext('2d')
-      ctx.strokeStyle = 'black'
-      ctx.lineCap = 'round' //线段直接的连接方式
-      ctx.lineWidth = 8
-      let padding = false
-      let last
-      if (isTouchDevice) {
-        canvas.ontouchstart = (e) => {
-          last = [e.touches[0].layerX, e.touches[0].clientY - 40]
-        }
-        canvas.ontouchmove = (e) => {
-          drawLine(
-            last[0],
-            last[1],
-            e.touches[0].clientX,
-            e.touches[0].clientY - 40
-          )
-          last = [e.touches[0].clientX, e.touches[0].clientY - 40]
-        }
-      } else {
-        canvas.onmousedown = (e) => {
-          console.log('onclick点击')
-          padding = true
-          last = [e.layerX, e.layerY]
-        }
-        canvas.onmouseup = () => {
-          padding = false
-          console.log('onmouseup鼠标弹起')
-        }
-        canvas.onmousemove = (e) => {
-          console.log(e)
-          if (padding === true) {
-            drawLine(last[0], last[1], e.layerX, e.layerY)
-            last = [e.layerX, e.layerY]
-          }
-        }
-      }
+            this.ui={
+                canvas:'#canvas',
+                paintColor:"#paintColor",
+                paintLineWidth:'#paintLineWidth',
+                clearBtn:'#clear'
+            }
 
-      function drawLine(x1, y1, x2, y2) {
-        ctx.beginPath()
-        ctx.moveTo(x1, y1)
-        ctx.lineTo(x2, y2)
-        ctx.stroke()
-      }
+        }
 
-      paintColor.onchange = (e) => {
-        ctx.strokeStyle = paintColor.value
-      }
+        init(){
+            this.initUI()
+            console.log(this.ui);
+            this.isTouchDevice = 'ontouchstart' in document.documentElement
+            this.ui.canvas.width = document.documentElement.clientWidth
+            this.ui.canvas.height = document.documentElement.clientHeight - 40;
 
-      paintLineWidth.onchange = () => {
-        ctx.lineWidth = paintLineWidth.value
-      }
-      clear.onclick = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-      }
-    </script>
-  </body>
+            this.initCtx()
+            this.initEvent()
+        }
+        initUI(){
+
+            Object.keys(this.ui).forEach((key)=>{
+                this.ui[key]=document.querySelector(this.ui[key])
+                console.log(this.ui[key]);
+            })
+
+        }
+        initCtx(){
+            this.ctx = this.ui.canvas.getContext('2d')
+            this.ctx.strokeStyle = 'black'
+            this.ctx.lineCap = 'round' //线段直接的连接方式
+            this.ctx.lineWidth = 8
+        }
+        initEvent(){
+            this.initUIEvent()
+            if (this.isTouchDevice) {
+                this.initTouchDrawEvent()
+            } else {
+                this.initPcDrawEvent()
+            }
+        }
+        initUIEvent(){
+            this.ui.paintColor.onchange = (e) => {
+                this.ctx.strokeStyle = this.ui.paintColor.value
+            }
+
+            this.ui.paintLineWidth.onchange = () => {
+                this.ctx.lineWidth = this.ui.paintLineWidth.value
+            }
+            this.ui.clearBtn.onclick = () => {
+                this.ctx.clearRect(0, 0, this.ui.canvas.width, this.ui.canvas.height)
+            }
+        }
+        initTouchDrawEvent(){
+            this.ui.canvas.ontouchstart = (e) => {
+                this.last = [e.touches[0].layerX, e.touches[0].clientY - 40]
+            }
+            this.ui.canvas.ontouchmove = (e) => {
+                this.drawLine(
+                    this.last[0],
+                    this.last[1],
+                    e.touches[0].clientX,
+                    e.touches[0].clientY - 40
+                )
+                this.last = [e.touches[0].clientX, e.touches[0].clientY - 40]
+            }
+        }
+        initPcDrawEvent(){
+            this.ui.canvas.onmousedown = (e) => {
+                console.log('onclick点击')
+                this.drawing = true
+                this.last = [e.layerX, e.layerY]
+            }
+            this.ui.canvas.onmouseup = () => {
+                this.drawing = false
+                console.log('onmouseup鼠标弹起')
+            }
+            this.ui.canvas.onmousemove = (e) => {
+                console.log(e)
+                if (this.drawing === true) {
+                    this.drawLine(this.last[0], this.last[1], e.layerX, e.layerY)
+                    this.last = [e.layerX, e.layerY]
+                }
+            }
+        }
+        drawLine(x1, y1, x2, y2){
+            this.ctx.beginPath()
+            this.ctx.moveTo(x1, y1)
+            this.ctx.lineTo(x2, y2)
+            this.ctx.stroke()
+        }
+    }
+
+
+    let drawer = new Drawer()
+    drawer.init()
+</script>
+<script src="//at.alicdn.com/t/font_1999892_1tlr29et967.js
+"></script>
+</body>
 </html>
