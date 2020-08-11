@@ -6,4 +6,4 @@
 * [Gitee仓库](https://gitee.com/dengzhixin/canvas-draw)
 * [Gitee预览](https://dengzhixin.gitee.io/canvas-draw/)
 
-![image](https://dengzhixin-halo.oss-cn-shenzhen.aliyuncs.com/halo/image_1597141752994.png?x-oss-process=style/pic)
+![截图](https://dengzhixin-halo.oss-cn-shenzhen.aliyuncs.com/halo/screenshot-dengzhixin.gitee.io-2020.08.11-18_33_02_1597142020260.png?x-oss-process=style/pic)
