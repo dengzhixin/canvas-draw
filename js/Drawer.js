@@ -48,6 +48,9 @@ class Drawer {
             this.pensDom[index] = new Pen(item, this.ui.penBox)
             this.pensDom[index].render('pen', this)
         })
+        this.pensDom[0].click()
+
+
     }
     initWhiteCanvasBg(){
         this.ctx.save()

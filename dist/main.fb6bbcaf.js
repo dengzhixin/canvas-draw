@@ -139,10 +139,10 @@ var Pen = /*#__PURE__*/function () {
 
     _classCallCheck(this, Pen);
 
-    _defineProperty(this, "click", function () {
-      _this.active = !_this.active;
-
+    _defineProperty(this, "click", function (e) {
       _this.reset();
+
+      _this.active = !_this.active;
 
       if (_this.active) {
         _this.dom.classList.add('active');
@@ -175,7 +175,7 @@ var Pen = /*#__PURE__*/function () {
         name = "clean";
       }
 
-      var html = "<svg class=\"icon\" aria-hidden=\"true\">\n                            <use xlink:href=\"#icon-".concat(name, "\"></use>\n                        </svg>");
+      var html = "<div style=\"display: inline-block\"> <svg class=\"icon\" aria-hidden=\"true\">\n                            <use xlink:href=\"#icon-".concat(name, "\"></use>\n                        </svg></div>");
       var temp = document.createElement('template');
       temp.innerHTML = html;
       var dom = temp.content.firstChild;
@@ -189,7 +189,7 @@ var Pen = /*#__PURE__*/function () {
     key: "reset",
     value: function reset() {
       this.pensDom.forEach(function (d) {
-        console.log(d);
+        d.active = false;
         d.dom.classList.remove('active');
       });
     }
@@ -323,6 +323,7 @@ var Drawer = /*#__PURE__*/function () {
 
         _this2.pensDom[index].render('pen', _this2);
       });
+      this.pensDom[0].click();
     }
   }, {
     key: "initWhiteCanvasBg",
@@ -482,7 +483,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65213" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65283" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

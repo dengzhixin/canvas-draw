@@ -15,9 +15,9 @@ class Pen {
         if (this.color === '#ffffff') {
             name = "clean"
         }
-        let html = `<svg class="icon" aria-hidden="true">
+        let html = `<div style="display: inline-block"> <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-${name}"></use>
-                        </svg>`
+                        </svg></div>`
         let temp = document.createElement('template')
         temp.innerHTML = html
 
@@ -30,14 +30,14 @@ class Pen {
     }
     reset(){
         this.pensDom.forEach((d) => {
-            console.log(d);
+            d.active=false
             d.dom.classList.remove('active')
 
         })
     }
-    click = () => {
-        this.active = !this.active
+    click = (e) => {
         this.reset()
+        this.active = !this.active
         if (this.active) {
             this.dom.classList.add('active')
             this.ctx.strokeStyle = this.color
