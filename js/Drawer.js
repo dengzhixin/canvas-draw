@@ -47,7 +47,6 @@ class Drawer {
         this.pens.forEach((item, index) => {
             this.pensDom[index] = new Pen(item, this.ui.penBox)
             this.pensDom[index].render('pen', this)
-
         })
     }
     initWhiteCanvasBg(){
@@ -76,14 +75,20 @@ class Drawer {
 
     initUIEvent() {
         this.ui.paintColor.onchange = (e) => {
-            this.ctx.strokeStyle = this.ui.paintColor.value
+            let color = this.ui.paintColor.value
+            this.ctx.strokeStyle = color
+            this.pensDom[0].reset()
+            this.ui.logo.style.color = color === '#ffffff' ? 'black' : color
+
         }
 
         this.ui.paintLineWidth.onchange = () => {
             this.ctx.lineWidth = this.ui.paintLineWidth.value
         }
         this.ui.clearBtn.onclick = () => {
-            this.ctx.clearRect(0, 0, this.ui.canvas.width, this.ui.canvas.height)
+            if(window.confirm("确定要清除画布吗")){
+                this.ctx.clearRect(0, 0, this.ui.canvas.width, this.ui.canvas.height)
+            }
         }
         this.ui.saveBtn.onclick=()=>{
             this.save()

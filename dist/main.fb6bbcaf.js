@@ -142,10 +142,7 @@ var Pen = /*#__PURE__*/function () {
     _defineProperty(this, "click", function () {
       _this.active = !_this.active;
 
-      _this.pensDom.forEach(function (d) {
-        console.log(d);
-        d.dom.classList.remove('active');
-      });
+      _this.reset();
 
       if (_this.active) {
         _this.dom.classList.add('active');
@@ -187,6 +184,14 @@ var Pen = /*#__PURE__*/function () {
       this.parentNode.appendChild(dom);
       this.dom = dom;
       this.dom.onclick = this.click;
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.pensDom.forEach(function (d) {
+        console.log(d);
+        d.dom.classList.remove('active');
+      });
     }
   }]);
 
@@ -355,7 +360,12 @@ var Drawer = /*#__PURE__*/function () {
       var _this3 = this;
 
       this.ui.paintColor.onchange = function (e) {
-        _this3.ctx.strokeStyle = _this3.ui.paintColor.value;
+        var color = _this3.ui.paintColor.value;
+        _this3.ctx.strokeStyle = color;
+
+        _this3.pensDom[0].reset();
+
+        _this3.ui.logo.style.color = color === '#ffffff' ? 'black' : color;
       };
 
       this.ui.paintLineWidth.onchange = function () {
@@ -363,7 +373,9 @@ var Drawer = /*#__PURE__*/function () {
       };
 
       this.ui.clearBtn.onclick = function () {
-        _this3.ctx.clearRect(0, 0, _this3.ui.canvas.width, _this3.ui.canvas.height);
+        if (window.confirm("确定要清除画布吗")) {
+          _this3.ctx.clearRect(0, 0, _this3.ui.canvas.width, _this3.ui.canvas.height);
+        }
       };
 
       this.ui.saveBtn.onclick = function () {
@@ -470,7 +482,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61443" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65013" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

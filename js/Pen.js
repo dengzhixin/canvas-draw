@@ -28,14 +28,16 @@ class Pen {
         this.dom = dom
         this.dom.onclick = this.click
     }
-
-    click = () => {
-        this.active = !this.active
+    reset(){
         this.pensDom.forEach((d) => {
             console.log(d);
             d.dom.classList.remove('active')
 
         })
+    }
+    click = () => {
+        this.active = !this.active
+        this.reset()
         if (this.active) {
             this.dom.classList.add('active')
             this.ctx.strokeStyle = this.color
