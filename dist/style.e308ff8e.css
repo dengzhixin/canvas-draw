@@ -97,7 +97,7 @@ input[type="color"]::-webkit-color-swatch { border: 0; }
 }
 @media (max-width: 768px) {
     h1{
-        font-size: 20px
+        font-size: 16px
     }
     .pen{
         font-size: 24px;

@@ -152,7 +152,7 @@ var Pen = /*#__PURE__*/function () {
 
         _this.ctx.strokeStyle = _this.color;
         _this.ui.paintColor.value = _this.color;
-        _this.ui.logo.style.color = _this.color;
+        _this.ui.logo.style.color = _this.color === '#ffffff' ? 'black' : _this.color;
       }
     });
 
@@ -470,7 +470,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61840" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61443" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
